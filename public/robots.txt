@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+# El formulario de objeción no debe indexarse: es un flujo, no contenido.
+Disallow: /objetar/
+
+Sitemap: /sitemap.xml

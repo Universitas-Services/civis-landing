@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+coverage
+.env.local
+.env*.local
+.git
+*.md
+!README.md
+.cursor
+.agents
+skills-lock.json

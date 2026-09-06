@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/**
+ * Paleta "Neutral Judicial" — cumplimiento obligatorio (skill veeduria-judicial-diseno).
+ *
+ * | Rol            | HEX       | Token repo        | Uso estricto                                      |
+ * |----------------|-----------|-------------------|---------------------------------------------------|
+ * | Gris Pizarra   | #0f172a   | toga-900          | Header, títulos, botones críticos en lienzo claro |
+ * | Oro Viejo      | #d97706   | balanza-600       | Acentos, iconos, CTA sobre header oscuro          |
+ * | Fondo General  | #f8fafc   | toga-50           | Fondo de página                                   |
+ * | Lienzo         | #ffffff   | white + toga-200  | Paneles / expediente; borde #e2e8f0               |
+ * | Validado       | #047857 / #ecfdf5 | validado-700/50 | Solo estatus de auditoría técnica OK              |
+ * | Objetado       | #57534e / #f5f5f4 | objetado-600/100 | Objeción / tacha (nunca rojo de alarma)           |
+ *
+ * Prohibido: púrpura/índigo, negro #000, sombras difusas, card-soup.
+ */
+@theme {
+  --color-toga-50: #f8fafc;
+  --color-toga-100: #f1f5f9;
+  --color-toga-200: #e2e8f0;
+  --color-toga-300: #cbd5e1;
+  --color-toga-400: #94a3b8;
+  --color-toga-500: #64748b;
+  --color-toga-600: #475569;
+  --color-toga-700: #334155;
+  --color-toga-800: #1e293b;
+  --color-toga-900: #0f172a;
+
+  --color-balanza-50: #fffbeb;
+  --color-balanza-100: #fef3c7;
+  --color-balanza-200: #fde68a;
+  --color-balanza-500: #f59e0b;
+  --color-balanza-600: #d97706;
+  --color-balanza-700: #b45309;
+
+  --color-validado-50: #ecfdf5;
+  --color-validado-700: #047857;
+
+  --color-objetado-100: #f5f5f4;
+  --color-objetado-600: #57534e;
+
+  --font-institucional: var(--fuente-serif), Georgia, "Times New Roman", serif;
+  --font-sistema: var(--fuente-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--fuente-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --font-sans: var(--fuente-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--fuente-serif), Georgia, "Times New Roman", serif;
+}
+
+:root {
+  color-scheme: light;
+  --duracion-ui: 150ms;
+  --color-gris-pizarra: #0f172a;
+  --color-oro-viejo: #d97706;
+  --color-fondo-general: #f8fafc;
+  --color-lienzo: #ffffff;
+  --color-borde-lienzo: #e2e8f0;
+  --color-validado-texto: #047857;
+  --color-validado-fondo: #ecfdf5;
+  --color-objetado-texto: #57534e;
+  --color-objetado-fondo: #f5f5f4;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-fondo-general);
+  color: var(--color-gris-pizarra);
+  font-family: var(--font-sistema);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-institucional);
+  letter-spacing: -0.011em;
+  text-wrap: balance;
+}
+
+.prosa {
+  max-width: 66ch;
+  text-wrap: pretty;
+}
+
+.cifra {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+code,
+.codigo {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-oro-viejo);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+a,
+button {
+  transition-duration: var(--duracion-ui);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.salto-contenido {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+}
+.salto-contenido:focus {
+  left: 1rem;
+  top: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-gris-pizarra);
+  color: white;
+  border-radius: 0.375rem;
+}
+
+/* Entrada mecánica de bloques (MOTION 1): 160ms, sin rebote. */
+@keyframes entrada-ui {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.entrada-ui {
+  animation: entrada-ui 160ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entrada-ui {
+    animation: none;
+  }
+}

@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.env.local
+.env*.local
+!.env.example
+next-env.d.ts
+
+# Herramientas de asistentes instaladas localmente (36 MB, no son código del proyecto)
+.cursor/
+.agents/
+skills-lock.json
