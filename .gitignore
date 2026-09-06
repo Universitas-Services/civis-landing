@@ -1,14 +1,36 @@
+# ── Dependencias y compilación ──────────────────────────────────────────
 node_modules/
-.next/
-out/
 coverage/
 *.tsbuildinfo
-.env.local
-.env*.local
-!.env.example
-next-env.d.ts
 
-# Herramientas de asistentes instaladas localmente (36 MB, no son código del proyecto)
+# ── Entorno ─────────────────────────────────────────────────────────────
+# Se ignora TODO .env* y se permite sólo el ejemplo. La lógica va en este
+# orden a propósito: enumerar los archivos a ignorar deja fuera los que
+# nadie previó (.env.production, .env.staging, .env.local.bak…), y basta
+# uno para filtrar credenciales.
+.env*
+!.env.example
+
+# ── Sistema operativo y editores ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# ── Registros ───────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# ── Herramientas de asistentes instaladas localmente ────────────────────
+# No son código del proyecto y pesan decenas de MB.
 .cursor/
 .agents/
+.codex/
 skills-lock.json
+
+# ── Específico de Next.js ───────────────────────────────────────────────
+.next/
+out/
+next-env.d.ts
