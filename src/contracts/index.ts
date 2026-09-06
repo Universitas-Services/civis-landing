@@ -158,3 +158,17 @@ export const createObjectionSchema = z.object({
   captchaToken: z.string().optional(),
 });
 export type CreateObjectionInput = z.infer<typeof createObjectionSchema>;
+
+/**
+ * Código de seguimiento de una objeción.
+ *
+ * Lo genera el servidor con formato OBJ-<año>-<10 hexadecimales>. Se valida
+ * aquí para no consultar al servidor por un código que obviamente no existe,
+ * y de paso se normaliza a mayúsculas: quien lo copia de un papel rara vez
+ * respeta el formato.
+ */
+export const codigoSeguimientoSchema = z
+  .string()
+  .trim()
+  .toUpperCase()
+  .regex(/^OBJ-\d{4}-[0-9A-F]{10}$/, "El código tiene el formato OBJ-2026-A1B2C3D4E5");
