@@ -35,7 +35,12 @@ const nextConfig: NextConfig = {
           "style-src 'self' 'unsafe-inline'",
           "script-src 'self' 'unsafe-inline'",
           ["connect-src 'self'", apiOrigin].filter(Boolean).join(" "),
-          ["frame-src 'self' blob:", documentOrigin].filter(Boolean).join(" "),
+          // El visor enmarca el documento servido por la API, no por el
+          // almacenamiento: los bytes pasan por ella para poder entregarse
+          // `inline` y con su nombre real. De ahí que `frame-src` necesite el
+          // origen de la API. `documentOrigin` se mantiene por si algún
+          // despliegue vuelve a servir desde el almacén.
+          ["frame-src 'self' blob:", apiOrigin, documentOrigin].filter(Boolean).join(" "),
         ].join("; "),
       },
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
