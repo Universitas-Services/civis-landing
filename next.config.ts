@@ -33,14 +33,30 @@ const nextConfig: NextConfig = {
           "img-src 'self' data:",
           "font-src 'self'",
           "style-src 'self' 'unsafe-inline'",
-          "script-src 'self' 'unsafe-inline'",
+          // En desarrollo React/Next usan eval() para depuración y sourcemaps;
+          // en producción no lo necesitan y el CSP sigue sin unsafe-eval.
+          [
+            "script-src 'self' 'unsafe-inline'",
+            process.env.NODE_ENV !== "production" ? "'unsafe-eval'" : null,
+          ]
+            .filter(Boolean)
+            .join(" "),
           ["connect-src 'self'", apiOrigin].filter(Boolean).join(" "),
           // El visor enmarca el documento servido por la API, no por el
           // almacenamiento: los bytes pasan por ella para poder entregarse
           // `inline` y con su nombre real. De ahí que `frame-src` necesite el
           // origen de la API. `documentOrigin` se mantiene por si algún
           // despliegue vuelve a servir desde el almacén.
-          ["frame-src 'self' blob:", apiOrigin, documentOrigin].filter(Boolean).join(" "),
+          // TEMPORAL / revertir: docs.google.com para el Google Form de
+          // objeción mientras el backend no genera el documento propio.
+          [
+            "frame-src 'self' blob:",
+            apiOrigin,
+            documentOrigin,
+            "https://docs.google.com",
+          ]
+            .filter(Boolean)
+            .join(" "),
         ].join("; "),
       },
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
