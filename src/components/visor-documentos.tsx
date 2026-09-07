@@ -51,12 +51,16 @@ export function VisorDocumentos({
     setError(null);
     setCargando(true);
     try {
+      // Se comprueba que el documento siga disponible antes de mostrarlo: un
+      // postulante puede haberse despublicado desde que se cargó la página.
       const respuesta = await fetch(
         `${API_URL}/public/documents/${documentos[indice]!.publicId}/download`,
       );
       if (!respuesta.ok) throw new Error();
-      const datos = (await respuesta.json()) as { url: string };
-      setUrl(datos.url);
+      // El visor no consume la URL firmada del almacenamiento, sino el
+      // documento servido por la API: es la única forma de que el navegador lo
+      // muestre —en vez de descargarlo— sea cual sea el proveedor detrás.
+      setUrl(`${API_URL}/public/documents/${documentos[indice]!.publicId}/content`);
     } catch {
       setError("No se pudo abrir el documento. Intente de nuevo.");
     } finally {

@@ -16,7 +16,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // La landing no acepta subidas: no necesita ampliar el límite del cuerpo.
   poweredByHeader: false,
-  output: "standalone",
+  // Netlify despliega con su propio adaptador (OpenNext); con `standalone`
+  // el sitio responde "Page Not Found" en todas las rutas. Docker, en cambio,
+  // lo necesita. Se decide por el entorno de construcción, no a mano.
+  output: process.env.NETLIFY ? undefined : "standalone",
   async headers() {
     const securityHeaders = [
       {
