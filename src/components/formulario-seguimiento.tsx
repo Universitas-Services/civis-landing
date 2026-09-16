@@ -89,7 +89,7 @@ export function FormularioSeguimiento() {
           <button
             type="submit"
             disabled={consultando}
-            className="shrink-0 rounded-md bg-toga-900 px-6 py-2.5 text-base font-semibold text-white hover:bg-toga-800 disabled:opacity-60"
+            className="shrink-0 rounded-md bg-balanza-600 px-6 py-2.5 text-base font-semibold text-white hover:bg-balanza-700 disabled:opacity-60"
           >
             {consultando ? "Consultando…" : "Consultar"}
           </button>

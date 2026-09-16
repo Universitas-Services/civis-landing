@@ -93,7 +93,7 @@ export default async function Postulados({
           </div>
           <button
             type="submit"
-            className="rounded-md bg-toga-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-toga-800"
+            className="rounded-md bg-balanza-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700"
           >
             Filtrar
           </button>

@@ -1,43 +1,49 @@
 @import "tailwindcss";
 
 /**
- * Paleta "Neutral Judicial" — cumplimiento obligatorio (skill veeduria-judicial-diseno).
+ * Paleta institucional CIVIS.
  *
- * | Rol            | HEX       | Token repo        | Uso estricto                                      |
- * |----------------|-----------|-------------------|---------------------------------------------------|
- * | Gris Pizarra   | #0f172a   | toga-900          | Header, títulos, botones críticos en lienzo claro |
- * | Oro Viejo      | #d97706   | balanza-600       | Acentos, iconos, CTA sobre header oscuro          |
- * | Fondo General  | #f8fafc   | toga-50           | Fondo de página                                   |
- * | Lienzo         | #ffffff   | white + toga-200  | Paneles / expediente; borde #e2e8f0               |
- * | Validado       | #047857 / #ecfdf5 | validado-700/50 | Solo estatus de auditoría técnica OK              |
- * | Objetado       | #57534e / #f5f5f4 | objetado-600/100 | Objeción / tacha (nunca rojo de alarma)           |
+ * Anclas de marca (guía de color):
+ *   Vino institucional  #7A1E2D
+ *   Azul profundo       #0F2A44
+ *   Gris principal      #64748B
+ *   Gris claro          #CBD5E1
+ *   Blanco              #F8FAFC
+ *   Negro               #111827
  *
- * Prohibido: púrpura/índigo, negro #000, sombras difusas, card-soup.
+ * Los nombres de token (`toga`, `balanza`) se conservan para no reescribir
+ * toda la UI: cambian los valores, no las clases. `toga` ancla el azul/gris
+ * institucional; `balanza` pasa del oro viejo al vino como acento.
+ *
+ * Semánticos: verde esmeralda para lo validado; gris piedra para lo objetado
+ * (una objeción es revisión, no alarma).
+ *
+ * Prohibido: púrpura/índigo, negro #000 puro, sombras difusas, card-soup.
  */
 @theme {
   --color-toga-50: #f8fafc;
-  --color-toga-100: #f1f5f9;
+  --color-toga-100: #eef2f6;
   --color-toga-200: #e2e8f0;
   --color-toga-300: #cbd5e1;
   --color-toga-400: #94a3b8;
   --color-toga-500: #64748b;
-  --color-toga-600: #475569;
+  --color-toga-600: #4a5d73;
   --color-toga-700: #334155;
-  --color-toga-800: #1e293b;
-  --color-toga-900: #0f172a;
+  --color-toga-800: #1a3a55;
+  --color-toga-900: #0f2a44;
 
-  --color-balanza-50: #fffbeb;
-  --color-balanza-100: #fef3c7;
-  --color-balanza-200: #fde68a;
-  --color-balanza-500: #f59e0b;
-  --color-balanza-600: #d97706;
-  --color-balanza-700: #b45309;
+  --color-balanza-50: #fdf2f4;
+  --color-balanza-100: #f9e4e8;
+  --color-balanza-200: #e8b4bc;
+  --color-balanza-500: #9a2a3a;
+  --color-balanza-600: #7a1e2d;
+  --color-balanza-700: #5c1622;
 
   --color-validado-50: #ecfdf5;
   --color-validado-700: #047857;
 
-  --color-objetado-100: #f5f5f4;
-  --color-objetado-600: #57534e;
+  --color-objetado-100: #f1f5f9;
+  --color-objetado-600: #64748b;
 
   --font-institucional: var(--fuente-serif), Georgia, "Times New Roman", serif;
   --font-sistema: var(--fuente-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -50,15 +56,17 @@
 :root {
   color-scheme: light;
   --duracion-ui: 150ms;
-  --color-gris-pizarra: #0f172a;
-  --color-oro-viejo: #d97706;
+  --color-gris-pizarra: #111827;
+  --color-oro-viejo: #7a1e2d; /* legacy: ahora vino institucional */
+  --color-vino: #7a1e2d;
+  --color-azul-profundo: #0f2a44;
   --color-fondo-general: #f8fafc;
   --color-lienzo: #ffffff;
-  --color-borde-lienzo: #e2e8f0;
+  --color-borde-lienzo: #cbd5e1;
   --color-validado-texto: #047857;
   --color-validado-fondo: #ecfdf5;
-  --color-objetado-texto: #57534e;
-  --color-objetado-fondo: #f5f5f4;
+  --color-objetado-texto: #64748b;
+  --color-objetado-fondo: #f1f5f9;
 }
 
 html {
@@ -100,7 +108,7 @@ code,
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-oro-viejo);
+  outline: 3px solid var(--color-vino);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -129,7 +137,7 @@ button {
   left: 1rem;
   top: 1rem;
   padding: 0.75rem 1rem;
-  background: var(--color-gris-pizarra);
+  background: var(--color-azul-profundo);
   color: white;
   border-radius: 0.375rem;
 }
