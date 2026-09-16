@@ -1,6 +1,6 @@
 ---
 name: front-publico-civis
-description: Sistema de diseño y reglas del front público de veeduría ciudadana (landing CIVIS). Úsala SIEMPRE que se toque cualquier cosa visible de este proyecto - una página, un componente, un color, un texto, una tabla, un formulario, un estado vacío o de error - y también al añadir una ruta nueva o consumir un endpoint. Actívala aunque solo digan "cambia este botón", "arregla la vista", "que se vea mejor", "añade una página" o "muestra este dato". Cubre la paleta Neutral Judicial, la escala tipográfica accesible, la medida de línea, los estados semánticos, qué datos pueden mostrarse y cuáles no, y la regla de cero peticiones a terceros.
+description: Sistema de diseño y reglas del front público de veeduría ciudadana (landing CIVIS). Úsala SIEMPRE que se toque cualquier cosa visible de este proyecto - una página, un componente, un color, un texto, una tabla, un formulario, un estado vacío o de error - y también al añadir una ruta nueva o consumir un endpoint. Actívala aunque solo digan "cambia este botón", "arregla la vista", "que se vea mejor", "añade una página" o "muestra este dato". Cubre la paleta institucional CIVIS (azul profundo + vino), la escala tipográfica accesible, la medida de línea, los estados semánticos, qué datos pueden mostrarse y cuáles no, y la regla de cero peticiones a terceros.
 ---
 
 # Front público — Consejo Independiente de Verificación de Credenciales
@@ -12,8 +12,8 @@ secretos y no conoce ninguna ruta interna.
 > **La identidad de este proyecto es propia.** El estándar de entrega de Mia
 > Services (paleta verde/azul, acento gráfico, modo ayuda) **no aplica aquí**:
 > esta plataforma es del Consejo Independiente y su identidad es la paleta
-> Neutral Judicial descrita abajo. Si otra skill de marca se activa, esta la
-> reemplaza para todo lo visible de este proyecto.
+> CIVIS (azul profundo + vino) descrita abajo. Si otra skill de marca se
+> activa, esta la reemplaza para todo lo visible de este proyecto.
 
 ## Lo que nunca se hace
 
@@ -34,24 +34,32 @@ Estas cinco reglas no se negocian; el resto del documento es orientación.
 5. **El color nunca comunica solo.** Toda insignia lleva texto y símbolo
    además del color (WCAG 1.4.1).
 
-## Paleta "Neutral Judicial"
+## Paleta institucional CIVIS
 
-Definida para transmitir autoridad sin usar los colores de la diatriba
-política. Los tokens viven en `src/styles/globals.css`; **usa los tokens, no
-hexadecimales sueltos**.
+Misma identidad que el panel interno. Los tokens viven en
+`src/styles/globals.css`; **usa los tokens, no hexadecimales sueltos**. Los
+nombres `toga` / `balanza` se conservan; cambian los valores (azul/grises y
+vino; ya no gris pizarra + oro viejo).
 
-| Token                           | Valor                 | Uso                                                                                                                           |
-| ------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `toga-900`                      | `#0f172a`             | Ancla: cabecera, títulos, botones principales. Gris pizarra, no negro: el negro puro resulta agresivo en pantalla             |
-| `toga-600` / `toga-500`         | `#475569` / `#64748b` | Texto secundario y metadatos                                                                                                  |
-| `toga-200` / `toga-100`         | `#e2e8f0` / `#f1f5f9` | Bordes tenues y separadores                                                                                                   |
-| `toga-50`                       | `#f8fafc`             | Fondo del sitio                                                                                                               |
-| `balanza-600`                   | `#d97706`             | Acento: filete institucional, foco, iconografía, alertas técnicas. **Sustituye al rojo**, que se asocia a alarma o partidismo |
-| `validado-700` / `validado-50`  | `#047857` / `#ecfdf5` | Credencial que superó la auditoría                                                                                            |
-| `objetado-600` / `objetado-100` | `#57534e` / `#f5f5f4` | Credencial objetada. Gris piedra, **no rojo**: una objeción es revisión documental normal, no un ataque                       |
+| Token                           | Valor                 | Uso                                                                                                      |
+| ------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------- |
+| `toga-900`                      | `#0F2A44`             | Ancla: cabecera, hero, bloques de marca. Azul profundo                                                   |
+| `toga-600` / `toga-500`         | `#4a5d73` / `#64748b` | Texto secundario y metadatos                                                                             |
+| `toga-200` / `toga-100`         | `#e2e8f0` / `#eef2f6` | Bordes tenues y separadores                                                                              |
+| `toga-50`                       | `#f8fafc`             | Fondo del sitio                                                                                          |
+| `balanza-600`                   | `#7A1E2D`             | Acento: filete, CTAs, foco, iconografía. Vino institucional (sustituye al oro viejo y al rojo de alarma) |
+| `validado-700` / `validado-50`  | `#047857` / `#ecfdf5` | Credencial que superó la auditoría                                                                       |
+| `objetado-600` / `objetado-100` | `#64748b` / `#f1f5f9` | Credencial objetada. Gris, **no rojo**: una objeción es revisión documental normal, no un ataque         |
+
+Marca: `components/marca.tsx` usa logos en `public/brand/` (blanco sobre
+cabecera oscura; color sobre pie claro). Favicon en `src/app/icon.png`.
 
 Las tarjetas van en blanco puro sobre `toga-50`, con borde `toga-200`. Sin
 sombras pesadas: la separación se hace con el borde y el espacio.
+
+CTAs rellenos sobre lienzo claro usan `bg-balanza-600` (no `bg-toga-900`).
+Los bloques de marca oscuros (cabecera, hero, franja del pie) siguen en
+`toga-900`.
 
 ## Tipografía — IBM Plex
 
@@ -118,9 +126,8 @@ desde el teléfono.
   `document.documentElement.scrollWidth > window.innerWidth` debe dar `false`
   a 375px. Si algo se sale, arregla el elemento, no pongas `overflow: hidden`
   encima.
-- La cabecera muestra las **siglas** por debajo de `sm` y el nombre completo
-  por encima: el nombre largo dejaba sin sitio al botón de objeción, que es
-  la acción más importante de la página.
+- La cabecera muestra el **logo CIVIS** (versión blanca) a un tamaño que
+  deja sitio al botón de objeción; no saturar con slogan en la barra.
 - Nada de tamaños de fuente menores en móvil: 16px sigue siendo el suelo.
 - Puntos de quiebre de Tailwind por defecto. `sm` 640 · `md` 768 · `lg` 1024.
 

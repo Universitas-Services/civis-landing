@@ -9,8 +9,8 @@ const ENLACES = [
 ] as const;
 
 /**
- * Header institucional — Neutral Judicial.
- * Rol: Gris Pizarra (`toga-900` / #0f172a). Acento: Oro Viejo (`balanza-600`).
+ * Header institucional CIVIS.
+ * Rol: Azul profundo (`toga-900` / #0F2A44). Acento: Vino (`balanza-600`).
  */
 export function Cabecera() {
   return (
@@ -37,7 +37,7 @@ export function Cabecera() {
           ))}
         </ul>
 
-        {/* Acción crítica sobre fondo pizarra: Oro Viejo como contraste. */}
+        {/* Acción crítica sobre fondo azul: Vino institucional como contraste. */}
         <Link
           href="/postulados"
           className="shrink-0 rounded-md bg-balanza-600 px-3.5 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700 sm:px-4"
