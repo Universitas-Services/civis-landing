@@ -22,8 +22,27 @@ export const CHAMBERS = [
   "CASACION_CIVIL",
   "CASACION_PENAL",
   "CASACION_SOCIAL",
+  "PLENA",
 ] as const;
 export type Chamber = (typeof CHAMBERS)[number];
+
+export const OBJECTION_CAUSE = [
+  "EXCLUSIVE_NATIONALITY",
+  "LACK_OF_HONOR",
+  "INSUFFICIENT_CAREER",
+  "MISSING_TITULAR_PROFESSOR",
+  "MISSING_JUDICIAL_RANK",
+  "MISSING_POSTGRADUATE",
+  "POLITICAL_MILITANCY",
+  "STATE_CONTRACTS",
+  "KINSHIP_HIGH_OFFICIALS",
+  "INCOMPATIBLE_MARRIAGE",
+  "KINSHIP_NOMINATION_COMMITTEE",
+  "FIRM_SANCTION",
+  "PROVEN_MENTAL_INCAPACITY",
+  "OTHER",
+] as const;
+export type ObjectionCause = (typeof OBJECTION_CAUSE)[number];
 
 export const OBJECTION_CATEGORY = [
   "POLITICAL_MILITANCY",
@@ -80,6 +99,8 @@ export interface PublicCandidateDetail extends PublicCandidateListItem {
   readonly rubricVersion: string;
   readonly publishedAt: string;
   readonly objectedCredentials: readonly string[];
+  /** Solo para precargar la denuncia. El ranking no la muestra. */
+  readonly nationalId?: string;
 }
 
 export interface PublicRanking {
@@ -146,17 +167,32 @@ export const nationalIdSchema = z
  * inmediata al ciudadano, pero la validación que manda es siempre la del
  * servidor: este lado es una cortesía, no una barrera de seguridad.
  */
-export const createObjectionSchema = z.object({
-  objectorFullName: z.string().trim().min(3).max(160),
-  objectorNationalId: nationalIdSchema.optional(),
-  objectorEmail: z.string().trim().toLowerCase().email("Correo inválido"),
-  objectorPhone: z.string().trim().max(40).optional(),
-  category: z.enum(OBJECTION_CATEGORY, { message: "Seleccione una causal" }),
-  description: z.string().trim().min(50, "Describa los hechos (mínimo 50 caracteres)").max(8000),
-  privacyConsent: z.literal(true, { message: "Debe aceptar el aviso de privacidad" }),
-  website: z.string().max(0).optional(),
-  captchaToken: z.string().optional(),
-});
+export const createObjectionSchema = z
+  .object({
+    objectorFullName: z.string().trim().min(3).max(160),
+    objectorNationalId: nationalIdSchema,
+    objectorEmail: z.string().trim().toLowerCase().email("Correo inválido"),
+    causes: z.array(z.enum(OBJECTION_CAUSE)).min(1, "Seleccione al menos una causal"),
+    otherCause: z.string().trim().max(500).optional(),
+    description: z.string().trim().min(50, "Describa los hechos (mínimo 50 caracteres)").max(8000),
+    evidenceUrl: z.string().trim().url("El enlace de las pruebas no es válido").max(2000),
+    verificationCode: z
+      .string()
+      .trim()
+      .regex(/^\d{6}$/, "El código de verificación tiene 6 dígitos"),
+    privacyConsent: z.literal(true, { message: "Debe aceptar el aviso de privacidad" }),
+    website: z.string().max(0).optional(),
+    captchaToken: z.string().optional(),
+  })
+  .superRefine((valor, ctx) => {
+    if (valor.causes.includes("OTHER") && !valor.otherCause?.trim()) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["otherCause"],
+        message: "Indique la otra razón",
+      });
+    }
+  });
 export type CreateObjectionInput = z.infer<typeof createObjectionSchema>;
 
 /**

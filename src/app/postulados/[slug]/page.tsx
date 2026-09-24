@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { obtenerPerfil } from "@/lib/candidatos";
+import { objecionesAbiertas } from "@/lib/portal";
 import { Pie } from "@/components/pie";
 import { RutaProceso } from "@/components/cabecera-proceso";
 import { InsigniaBanda, InsigniaProvisional, InsigniaSala, Puntaje } from "@/components/insignias";
@@ -30,7 +31,7 @@ export default async function PerfilPublico({
   readonly params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const perfil = await obtenerPerfil(slug);
+  const [perfil, puedeObjetar] = await Promise.all([obtenerPerfil(slug), objecionesAbiertas()]);
   if (!perfil) notFound();
 
   return (
@@ -80,12 +81,14 @@ export default async function PerfilPublico({
             </div>
           </div>
 
-          <Link
-            href={`/objetar/${perfil.publicId}`}
-            className="mt-6 inline-flex items-center gap-2 rounded-md bg-balanza-600 px-5 py-3 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700"
-          >
-            Objetar candidato <span aria-hidden="true">→</span>
-          </Link>
+          {puedeObjetar && (
+            <Link
+              href={`/objetar/${perfil.publicId}`}
+              className="mt-6 inline-flex items-center gap-2 rounded-md bg-balanza-600 px-5 py-3 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700"
+            >
+              Objetar candidato <span aria-hidden="true">→</span>
+            </Link>
+          )}
         </div>
       </header>
 

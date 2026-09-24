@@ -24,10 +24,13 @@ describe("nationalIdSchema", () => {
 describe("createObjectionSchema", () => {
   const valida = {
     objectorFullName: "Ciudadana Ficticia",
+    objectorNationalId: "V-12345678",
     objectorEmail: "persona@ejemplo.invalid",
-    category: "FALSE_CREDENTIAL" as const,
+    causes: ["POLITICAL_MILITANCY"] as const,
     description:
       "Descripción de prueba con la longitud mínima que exige el contrato, para que el esquema la acepte.",
+    evidenceUrl: "https://ejemplo.invalid/prueba.pdf",
+    verificationCode: "123456",
     privacyConsent: true as const,
   };
 
@@ -59,10 +62,24 @@ describe("createObjectionSchema", () => {
     );
   });
 
-  it("la cédula del objetante es opcional", () => {
+  it("exige la cédula del objetante y el enlace de pruebas", () => {
     expect(createObjectionSchema.safeParse(valida).success).toBe(true);
+    expect(createObjectionSchema.safeParse({ ...valida, objectorNationalId: "" }).success).toBe(
+      false,
+    );
+    expect(createObjectionSchema.safeParse({ ...valida, evidenceUrl: "no-es-url" }).success).toBe(
+      false,
+    );
+  });
+
+  it("si marca Otro, exige el texto", () => {
+    expect(createObjectionSchema.safeParse({ ...valida, causes: ["OTHER"] }).success).toBe(false);
     expect(
-      createObjectionSchema.safeParse({ ...valida, objectorNationalId: "V-9876543" }).success,
+      createObjectionSchema.safeParse({
+        ...valida,
+        causes: ["OTHER"],
+        otherCause: "Otra incompatibilidad comprobada",
+      }).success,
     ).toBe(true);
   });
 });

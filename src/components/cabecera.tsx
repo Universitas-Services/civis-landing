@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Marca } from "./marca";
+import { objecionesAbiertas } from "@/lib/portal";
 
 const ENLACES = [
   { href: "/reglas", texto: "Reglas y baremo" },
@@ -12,7 +13,8 @@ const ENLACES = [
  * Header institucional CIVIS.
  * Rol: Azul profundo (`toga-900` / #0F2A44). Acento: Vino (`balanza-600`).
  */
-export function Cabecera() {
+export async function Cabecera() {
+  const puedeObjetar = await objecionesAbiertas();
   return (
     <header className="sticky top-0 z-40 bg-toga-900">
       <div aria-hidden="true" className="h-1 bg-balanza-600" />
@@ -37,14 +39,15 @@ export function Cabecera() {
           ))}
         </ul>
 
-        {/* Acción crítica sobre fondo azul: Vino institucional como contraste. */}
-        <Link
-          href="/postulados"
-          className="shrink-0 rounded-md bg-balanza-600 px-3.5 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700 sm:px-4"
-        >
-          Objetar
-          <span className="hidden sm:inline"> candidato</span>
-        </Link>
+        {puedeObjetar && (
+          <Link
+            href="/postulados"
+            className="shrink-0 rounded-md bg-balanza-600 px-3.5 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700 sm:px-4"
+          >
+            Objetar
+            <span className="hidden sm:inline"> candidato</span>
+          </Link>
+        )}
       </nav>
 
       <ul className="flex gap-1 overflow-x-auto border-t border-toga-800 px-4 py-2 md:hidden">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Marca } from "./marca";
 import { SITE } from "@/lib/config";
+import { objecionesAbiertas } from "@/lib/portal";
 
 const ENLACES = [
   { href: "/ranking", numero: "01", texto: "Ranking" },
@@ -10,7 +11,8 @@ const ENLACES = [
   { href: "/privacidad", numero: "", texto: "Privacidad" },
 ] as const;
 
-export function Pie({ actualizadoEn }: { readonly actualizadoEn?: string | null }) {
+export async function Pie({ actualizadoEn }: { readonly actualizadoEn?: string | null }) {
+  const puedeObjetar = await objecionesAbiertas();
   return (
     <footer className="mt-16 border-t border-toga-200">
       {/* Franja de participación ciudadana.
@@ -38,12 +40,14 @@ export function Pie({ actualizadoEn }: { readonly actualizadoEn?: string | null 
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row lg:shrink-0">
-              <Link
-                href="/postulados"
-                className="inline-flex w-fit items-center gap-2 rounded-md bg-balanza-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700"
-              >
-                Presentar una objeción <span aria-hidden="true">→</span>
-              </Link>
+              {puedeObjetar && (
+                <Link
+                  href="/postulados"
+                  className="inline-flex w-fit items-center gap-2 rounded-md bg-balanza-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700"
+                >
+                  Presentar una objeción <span aria-hidden="true">→</span>
+                </Link>
+              )}
               <Link
                 href="/seguimiento"
                 className="inline-flex w-fit items-center gap-2 rounded-md border border-toga-600 px-4 py-2.5 text-sm font-medium text-toga-100 transition-colors duration-150 hover:border-toga-400 hover:text-white"
