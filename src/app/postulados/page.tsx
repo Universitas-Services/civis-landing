@@ -29,6 +29,7 @@ const SALAS = [
   ["CASACION_CIVIL", "Casación Civil"],
   ["CASACION_PENAL", "Casación Penal"],
   ["CASACION_SOCIAL", "Casación Social"],
+  ["PLENA", "Plena"],
 ] as const;
 
 export default async function Postulados({

@@ -52,15 +52,13 @@ export async function apiGet<T>(path: string, options: FetchOptions = {}): Promi
   return response.json() as Promise<T>;
 }
 
-export async function apiPost<T>(path: string, body: unknown): Promise<T> {
+export async function apiPost<T>(path: string, body: unknown, timeoutMs = 15_000): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(body),
     cache: "no-store",
-    // Más holgado que en lectura: al enviar una objeción, el servidor valida,
-    // guarda y emite el código de seguimiento.
-    signal: AbortSignal.timeout(15_000),
+    signal: AbortSignal.timeout(timeoutMs),
   });
 
   const payload = (await response.json().catch(() => null)) as T | { message?: string } | null;

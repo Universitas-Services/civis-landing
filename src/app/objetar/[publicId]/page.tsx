@@ -3,21 +3,16 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import type { PublicCandidateDetail } from "@/contracts";
 import { apiGet } from "@/lib/api";
+import { objecionesAbiertas } from "@/lib/portal";
 import { Pie } from "@/components/pie";
 import { RutaProceso } from "@/components/cabecera-proceso";
-// TEMPORAL / revertir: el formulario propio está en
-// `@/components/formulario-objecion` y se reactivará cuando el backend
-// genere el documento de objeción. Mientras tanto se usa un Google Form.
+import { FormularioObjecion } from "@/components/formulario-objecion";
 
 export const metadata: Metadata = {
   title: "Objetar candidato",
-  description: "Formulario de objeción ciudadana con protección de identidad.",
+  description: "Formulario de impugnación de candidaturas al TSJ.",
   robots: { index: false, follow: false },
 };
-
-/** TEMPORAL / revertir: excepción a “cero terceros” (skill front-publico-civis). */
-const GOOGLE_FORM_EMBED_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfBEfufwUmIiz0vTOEfDXHlOlGc_w4th-X6_qHF-3NcY8Bg0Q/viewform?embedded=true";
 
 export default async function Objetar({
   params,
@@ -25,6 +20,7 @@ export default async function Objetar({
   readonly params: Promise<{ publicId: string }>;
 }) {
   const { publicId } = await params;
+  const abierto = await objecionesAbiertas();
   const perfil = await apiGet<PublicCandidateDetail>(`/public/candidates/${publicId}`, {
     revalidate: 0,
   }).catch(() => null);
@@ -56,10 +52,6 @@ export default async function Objetar({
           <h1 className="mt-2 font-serif text-2xl font-semibold tracking-tight text-white sm:text-3xl">
             Objetar a {perfil.fullName}
           </h1>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-toga-300">
-            Complete el formulario embebido. Este sitio no publica su identidad. Objetar no modifica
-            el puntaje por sí solo.
-          </p>
         </div>
       </header>
 
@@ -67,21 +59,29 @@ export default async function Objetar({
         className="entrada-ui mx-auto max-w-3xl px-4 py-10 sm:px-6"
         style={{ animationDelay: "40ms" }}
       >
-        <iframe
-          src={GOOGLE_FORM_EMBED_URL}
-          title={`Formulario de objeción — ${perfil.fullName}`}
-          className="w-full border-0"
-          width={640}
-          height={3621}
-          loading="lazy"
-        >
-          Cargando…
-        </iframe>
+        {abierto ? (
+          <FormularioObjecion
+            publicId={perfil.publicId}
+            nombrePostulante={perfil.fullName}
+            cedulaPostulante={perfil.nationalId ?? "—"}
+            sala={perfil.chamber}
+          />
+        ) : (
+          <div className="border border-toga-200 bg-white p-6">
+            <h2 className="font-serif text-lg font-semibold text-toga-900">
+              El lapso de objeciones no está abierto
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-toga-700">
+              En este momento no se reciben impugnaciones. Cuando el Consejo abra el lapso, el botón
+              aparecerá en la ficha del postulante.
+            </p>
+          </div>
+        )}
 
         <p className="mt-8 text-center text-sm text-toga-500">
           <Link
             href={`/postulados/${perfil.slug}`}
-            className="font-medium text-balanza-700 transition-colors duration-150 hover:underline"
+            className="font-medium text-balanza-700 hover:underline"
           >
             ← Volver al perfil
           </Link>

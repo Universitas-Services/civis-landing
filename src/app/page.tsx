@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PublicProcessStats, PublicRanking } from "@/contracts";
 import { apiGet } from "@/lib/api";
+import { objecionesAbiertas } from "@/lib/portal";
 import { Pie } from "@/components/pie";
 import { InsigniaBanda, Puntaje } from "@/components/insignias";
 
@@ -60,7 +61,7 @@ function Cifra({
 }
 
 export default async function Inicio() {
-  const { stats, ranking } = await cargar();
+  const [{ stats, ranking }, puedeObjetar] = await Promise.all([cargar(), objecionesAbiertas()]);
   const destacados = ranking?.entries.filter((e) => e.position !== null).slice(0, 5) ?? [];
 
   return (
@@ -83,12 +84,15 @@ export default async function Inicio() {
             Verificación de credenciales · Veeduría ciudadana
           </p>
           <h1 className="mt-6 max-w-3xl text-3xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
-            La transparencia no se declara: se verifica.
+            La transparencia judicial no es NEGOCIABLE:
+            <br />
+            Auditemos a los candidatos al TSJ.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-toga-300 sm:text-lg">
-            Baremo único y público, expedientes a la vista y objeción ciudadana con seguimiento. El
-            puntaje se calcula con reglas conocidas de antemano; no depende de apreciación
-            discrecional.
+            Baremo único y público, expedientes a la vista y objeción ciudadana con seguimiento. Por
+            primera vez, la sociedad civil y la academia técnica se unen para fiscalizar las
+            credenciales de los aspirantes al Tribunal Supremo de Justicia mediante reglas objetivas
+            y conocidas de antemano.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -120,38 +124,41 @@ export default async function Inicio() {
 
         <div className="grid gap-4 lg:grid-cols-12 lg:gap-5">
           {/* Protagonista: participación ciudadana */}
-          <Link
-            href="/postulados"
-            className="group relative flex flex-col justify-between overflow-hidden rounded-lg bg-toga-900 p-7 sm:p-8 lg:col-span-5 lg:min-h-[22rem]"
-          >
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 opacity-[0.07]"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(0deg, transparent 0 22px, #fff 22px 23px), repeating-linear-gradient(90deg, transparent 0 22px, #fff 22px 23px)",
-              }}
-            />
-            <div className="relative">
-              <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-balanza-500">
-                Participación ciudadana
-              </p>
-              <p className="mt-4 font-serif text-2xl font-semibold leading-snug tracking-tight text-white sm:text-3xl">
-                Objetar una credencial con código de seguimiento
-              </p>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-toga-300">
-                Elige el postulante, tipifica la causal y recibe un código. Su identidad no se
-                publica; el puntaje no cambia solo por objetar.
-              </p>
-            </div>
-            <span className="relative mt-8 inline-flex w-fit items-center gap-2 rounded-md bg-balanza-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 group-hover:bg-balanza-700">
-              Ir a objetar
-              <span aria-hidden="true">→</span>
-            </span>
-          </Link>
+          {puedeObjetar && (
+            <Link
+              href="/postulados"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-lg bg-toga-900 p-7 sm:p-8 lg:col-span-5 lg:min-h-[22rem]"
+            >
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 opacity-[0.07]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(0deg, transparent 0 22px, #fff 22px 23px), repeating-linear-gradient(90deg, transparent 0 22px, #fff 22px 23px)",
+                }}
+              />
+              <div className="relative">
+                <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-balanza-500">
+                  Participación ciudadana
+                </p>
+                <p className="mt-4 font-serif text-2xl font-semibold leading-snug tracking-tight text-white sm:text-3xl">
+                  Objetar una credencial con código de seguimiento
+                </p>
+                <p className="mt-4 max-w-sm text-sm leading-relaxed text-toga-300">
+                  Elige el postulante, tipifica la causal y recibe un código. Su identidad no se
+                  publica; el puntaje no cambia solo por objetar.
+                </p>
+              </div>
+              <span className="relative mt-8 inline-flex w-fit items-center gap-2 rounded-md bg-balanza-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 group-hover:bg-balanza-700">
+                Ir a objetar
+                <span aria-hidden="true">→</span>
+              </span>
+            </Link>
+          )}
 
-          {/* Cuatro destinos numerados */}
-          <ul className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
+          <ul
+            className={`grid gap-4 sm:grid-cols-2 ${puedeObjetar ? "lg:col-span-7" : "lg:col-span-12"}`}
+          >
             {ACCESOS.map((a) => (
               <li key={a.href}>
                 <Link
