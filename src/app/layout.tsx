@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cabecera } from "@/components/cabecera";
+import { Toaster } from "@/components/ui/sonner";
 import { mono, sans, serif } from "@/lib/fuentes";
 import { SITE } from "@/lib/config";
 import "@/styles/globals.css";
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { readonly children: React.Reac
         </a>
         <Cabecera />
         <main id="contenido">{children}</main>
+        <Toaster />
       </body>
     </html>
   );

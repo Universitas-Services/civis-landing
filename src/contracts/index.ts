@@ -92,10 +92,27 @@ export interface PublicDocumentRef {
   readonly downloadPath: string;
 }
 
+export interface FichaCampoPublico {
+  readonly clave: string;
+  readonly etiqueta: string;
+  readonly valor: string;
+}
+
+export interface FichaGrupoPublico {
+  readonly id: string;
+  readonly titulo: string;
+  readonly campos: readonly FichaCampoPublico[];
+}
+
+export interface FichaPublica {
+  readonly grupos: readonly FichaGrupoPublico[];
+}
+
 export interface PublicCandidateDetail extends PublicCandidateListItem {
   readonly publicSummary: string | null;
   readonly breakdown: readonly PublicScoreBreakdownItem[];
   readonly documents: readonly PublicDocumentRef[];
+  readonly ficha?: FichaPublica;
   readonly rubricVersion: string;
   readonly publishedAt: string;
   readonly objectedCredentials: readonly string[];
@@ -154,12 +171,12 @@ export interface PublicRules {
 
 // ─────────────────────────────────────────────────── formulario de objeción
 
-/** Debe coincidir con `nationalIdSchema` del backend. */
+/** Debe coincidir con `nationalIdSchema` del backend. El mensaje es para el ciudadano. */
 export const nationalIdSchema = z
   .string()
   .trim()
   .toUpperCase()
-  .regex(/^[VEJ]-?\d{6,9}$/, "Formato esperado: V-12345678")
+  .regex(/^[VEJ]-?\d{6,9}$/, "Indique la cédula con el formato V-12345678.")
   .transform((v) => (v.includes("-") ? v : `${v[0]}-${v.slice(1)}`));
 
 /**
@@ -169,18 +186,34 @@ export const nationalIdSchema = z
  */
 export const createObjectionSchema = z
   .object({
-    objectorFullName: z.string().trim().min(3).max(160),
+    objectorFullName: z
+      .string()
+      .trim()
+      .min(3, "Escriba el nombre y los apellidos completos.")
+      .max(160, "El nombre no puede superar los 160 caracteres."),
     objectorNationalId: nationalIdSchema,
-    objectorEmail: z.string().trim().toLowerCase().email("Correo inválido"),
-    causes: z.array(z.enum(OBJECTION_CAUSE)).min(1, "Seleccione al menos una causal"),
-    otherCause: z.string().trim().max(500).optional(),
-    description: z.string().trim().min(50, "Describa los hechos (mínimo 50 caracteres)").max(8000),
-    evidenceUrl: z.string().trim().url("El enlace de las pruebas no es válido").max(2000),
+    objectorEmail: z.string().trim().toLowerCase().email("Correo inválido."),
+    causes: z.array(z.enum(OBJECTION_CAUSE)).min(1, "Seleccione al menos una causal."),
+    otherCause: z
+      .string()
+      .trim()
+      .max(500, "La otra razón no puede superar los 500 caracteres.")
+      .optional(),
+    description: z
+      .string()
+      .trim()
+      .min(50, "Describa los hechos con al menos 50 caracteres.")
+      .max(8000, "La descripción no puede superar los 8000 caracteres."),
+    evidenceUrl: z
+      .string()
+      .trim()
+      .url("Indique un enlace válido a las pruebas.")
+      .max(2000, "El enlace no puede superar los 2000 caracteres."),
     verificationCode: z
       .string()
       .trim()
-      .regex(/^\d{6}$/, "El código de verificación tiene 6 dígitos"),
-    privacyConsent: z.literal(true, { message: "Debe aceptar el aviso de privacidad" }),
+      .regex(/^\d{6}$/, "El código de verificación tiene 6 dígitos."),
+    privacyConsent: z.literal(true, { message: "Debe aceptar el aviso de privacidad." }),
     website: z.string().max(0).optional(),
     captchaToken: z.string().optional(),
   })
@@ -189,7 +222,7 @@ export const createObjectionSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["otherCause"],
-        message: "Indique la otra razón",
+        message: "Indique la otra razón.",
       });
     }
   });
