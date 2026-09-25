@@ -69,11 +69,11 @@ export default async function Objetar({
         ) : (
           <div className="border border-toga-200 bg-white p-6">
             <h2 className="font-serif text-lg font-semibold text-toga-900">
-              El lapso de objeciones no está abierto
+              Lapso de impugnación cerrado
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-toga-700">
-              En este momento no se reciben impugnaciones. Cuando el Consejo abra el lapso, el botón
-              aparecerá en la ficha del postulante.
+              El lapso legal de impugnación se encuentra cerrado o finalizado. En este momento no
+              se reciben objeciones.
             </p>
           </div>
         )}

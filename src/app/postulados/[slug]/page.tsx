@@ -6,7 +6,6 @@ import { objecionesAbiertas } from "@/lib/portal";
 import { Pie } from "@/components/pie";
 import { RutaProceso } from "@/components/cabecera-proceso";
 import { InsigniaBanda, InsigniaProvisional, InsigniaSala, Puntaje } from "@/components/insignias";
-import { VisorDocumentos } from "@/components/visor-documentos";
 
 export const revalidate = 60;
 
@@ -81,13 +80,18 @@ export default async function PerfilPublico({
             </div>
           </div>
 
-          {puedeObjetar && (
+          {puedeObjetar ? (
             <Link
               href={`/objetar/${perfil.publicId}`}
               className="mt-6 inline-flex items-center gap-2 rounded-md bg-balanza-600 px-5 py-3 text-sm font-semibold text-white transition-colors duration-150 hover:bg-balanza-700"
             >
               Objetar candidato <span aria-hidden="true">→</span>
             </Link>
+          ) : (
+            <p className="mt-6 max-w-xl text-sm leading-relaxed text-toga-600">
+              El lapso legal de impugnación se encuentra cerrado o finalizado. En este momento no
+              se reciben objeciones.
+            </p>
           )}
         </div>
       </header>
@@ -174,20 +178,36 @@ export default async function PerfilPublico({
             )}
           </section>
 
-          <section aria-labelledby="expediente">
+          <section aria-labelledby="ficha">
             <p className="font-mono text-xs tracking-wider text-balanza-600">B</p>
             <h2
-              id="expediente"
+              id="ficha"
               className="mt-1 font-serif text-xl font-semibold tracking-tight text-toga-900"
             >
-              Expediente
+              Ficha
             </h2>
-            <p className="mt-2 text-sm text-toga-600">
-              Documentos autorizados. Se leen en la página; no hace falta descargarlos.
-            </p>
-            <div className="mt-5">
-              <VisorDocumentos documentos={perfil.documents} />
-            </div>
+            <p className="mt-2 text-sm text-toga-600">Datos extraídos de la revisión documental.</p>
+            {perfil.ficha?.grupos.length ? (
+              <div className="mt-5 space-y-3">
+                {perfil.ficha.grupos.map((grupo) => (
+                  <section key={grupo.id} className="border border-toga-200 bg-white p-4">
+                    <h3 className="text-sm font-semibold text-toga-900">{grupo.titulo}</h3>
+                    <dl className="mt-3 space-y-2">
+                      {grupo.campos.map((campo) => (
+                        <div key={campo.clave}>
+                          <dt className="text-xs text-toga-500">{campo.etiqueta}</dt>
+                          <dd className="text-sm text-toga-900">{campo.valor}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </section>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-5 text-sm text-toga-600">
+                La ficha todavía no tiene datos de revisión.
+              </p>
+            )}
           </section>
         </div>
       </div>

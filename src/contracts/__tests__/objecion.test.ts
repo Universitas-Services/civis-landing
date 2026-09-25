@@ -82,4 +82,60 @@ describe("createObjectionSchema", () => {
       }).success,
     ).toBe(true);
   });
+
+  it("explica en español cada dato que falta o no cumple el formato", () => {
+    const casos: { campo: string; valor: unknown; mensaje: string }[] = [
+      {
+        campo: "objectorFullName",
+        valor: "A",
+        mensaje: "Escriba el nombre y los apellidos completos.",
+      },
+      {
+        campo: "objectorNationalId",
+        valor: "",
+        mensaje: "Indique la cédula con el formato V-12345678.",
+      },
+      {
+        campo: "objectorEmail",
+        valor: "no-es-correo",
+        mensaje: "Indique un correo electrónico válido.",
+      },
+      {
+        campo: "description",
+        valor: "no me gusta",
+        mensaje: "Describa los hechos con al menos 50 caracteres.",
+      },
+      {
+        campo: "evidenceUrl",
+        valor: "no-es-url",
+        mensaje: "Indique un enlace válido a las pruebas.",
+      },
+      {
+        campo: "verificationCode",
+        valor: "12",
+        mensaje: "El código de verificación tiene 6 dígitos.",
+      },
+      {
+        campo: "privacyConsent",
+        valor: false,
+        mensaje: "Debe aceptar el aviso de privacidad.",
+      },
+    ];
+
+    for (const caso of casos) {
+      const resultado = createObjectionSchema.safeParse({ ...valida, [caso.campo]: caso.valor });
+      expect(resultado.success).toBe(false);
+      if (resultado.success) continue;
+      const aviso = resultado.error.issues.find((issue) => issue.path[0] === caso.campo);
+      expect(aviso?.message).toBe(caso.mensaje);
+    }
+
+    const sinCausal = createObjectionSchema.safeParse({ ...valida, causes: [] });
+    expect(sinCausal.success).toBe(false);
+    if (!sinCausal.success) {
+      expect(sinCausal.error.issues.find((issue) => issue.path[0] === "causes")?.message).toBe(
+        "Seleccione al menos una causal.",
+      );
+    }
+  });
 });

@@ -28,6 +28,7 @@ function normalizar(perfil: PublicCandidateDetail): PublicCandidateDetail {
     ...perfil,
     breakdown: perfil.breakdown ?? [],
     documents: perfil.documents ?? [],
+    ficha: perfil.ficha ?? { grupos: [] },
     objectedCredentials: perfil.objectedCredentials ?? [],
   };
 }
