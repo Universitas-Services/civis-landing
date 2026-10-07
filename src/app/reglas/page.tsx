@@ -22,85 +22,103 @@ const DIMENSIONES = [
   {
     numero: "01",
     titulo: "Formación académica superior",
-    maximo: 35,
+    maximo: 30,
     descripcion:
-      "Evalúa la acreditación de posgrados universitarios en ciencias jurídicas debidamente registrados y protocolizados.",
+      "Evalúa la acreditación de posgrados universitarios en ciencias jurídicas y diplomados de perfeccionamiento profesional debidamente registrados. Requiere pertinencia temática directa con la Sala del TSJ a la que se aspira.",
     criterios: [
       {
-        label: "Doctorado en derecho o área afín",
-        detalle: "25 puntos (requiere título registrado y constancia de aprobación de tesis).",
-        puntos: "25 pts",
+        label: "Grado académico principal",
+        detalle:
+          "Doctorado 18 puntos (requiere constancia de tesis), maestría 12 puntos o especialización 6 puntos. Tope de 18 puntos en este renglón.",
+        puntos: "máx. 18 pts",
       },
       {
-        label: "Maestría jurídica",
-        detalle: "15 puntos (requiere título registrado y aprobación de trabajo de grado).",
-        puntos: "15 pts",
+        label: "Posgrados adicionales",
+        detalle: "2 puntos por cada título de posgrado extra en áreas afines.",
+        puntos: "máx. 10 pts",
       },
       {
-        label: "Especialización jurídica",
-        detalle: "10 puntos (requiere título registrado).",
-        puntos: "10 pts",
+        label: "Diplomados avanzados",
+        detalle: "1 punto por cada certificado afín mayor a 80 horas.",
+        puntos: "máx. 2 pts",
       },
     ],
-    cierre:
-      "Regla de cierre: el sistema aplica un tope condicional de 35 puntos máximos. Tener múltiples maestrías o especializaciones no permite sobrepasar este límite.",
+    cierre: "Regla de cierre: el sistema aplica un tope de 30 puntos máximos en esta dimensión.",
   },
   {
     numero: "02",
-    titulo: "Docencia universitaria",
-    maximo: 20,
+    titulo: "Producción científica y doctrinal",
+    maximo: 10,
     descripcion:
-      "Pondera la trayectoria docente en facultades de Derecho reconocidas, premiando el mérito académico competitivo.",
+      "Valora la investigación y el aporte al acervo jurídico nacional e internacional con identificadores auditables.",
     criterios: [
       {
-        label: "Docencia por concurso público de oposición",
-        detalle: "3 puntos por cada año de ejercicio acreditado.",
-        puntos: "3 pts / año",
+        label: "Libros jurídicos",
+        detalle:
+          "0,5 puntos por cada libro publicado en autoría o coautoría con número de registro ISBN y depósito legal comprobable.",
+        puntos: "máx. 5 pts",
       },
       {
-        label: "Docencia contratada o invitada",
-        detalle: "1 punto por cada año de ejercicio acreditado.",
-        puntos: "1 pt / año",
+        label: "Artículos científicos",
+        detalle:
+          "0,5 puntos por cada artículo publicado en revistas arbitradas e indexadas reconocidas (por ejemplo Scopus, SciELO o Redalyc).",
+        puntos: "máx. 5 pts",
       },
     ],
   },
   {
     numero: "03",
-    titulo: "Producción científica y doctrinal",
-    maximo: 20,
+    titulo: "Trayectoria profesional y perfiles PLUS",
+    maximo: 50,
     descripcion:
-      "Valora la investigación y el aporte al acervo jurídico nacional e internacional con identificadores auditables.",
+      "Suma los años de experiencia comprobada en judicatura, docencia y libre ejercicio profesional, con igualdad de condiciones y tope global.",
     criterios: [
       {
-        label: "Libro jurídico publicado",
-        detalle: "5 puntos por obra con número de registro ISBN y depósito legal.",
-        puntos: "5 pts / obra",
-      },
-      {
-        label: "Artículo en revista arbitrada e indexada",
+        label: "Requisito base de elegibilidad (Art. 263 CRBV)",
         detalle:
-          "2,5 puntos por artículo (en revistas reconocidas como Scopus, SciELO o Redalyc).",
-        puntos: "2,5 pts / artículo",
-      },
-    ],
-  },
-  {
-    numero: "04",
-    titulo: "Trayectoria profesional y carrera judicial",
-    maximo: 25,
-    descripcion: "Verifica el ejercicio continuo y la madurez en la abogacía.",
-    criterios: [
-      {
-        label: "Requisito de elegibilidad constitucional (Art. 263 CRBV)",
-        detalle:
-          "15 años mínimos de ejercicio profesional, docencia o judicatura. Filtro excluyente: si un postulante registra menos de 15 años acumulados, el sistema lo califica con 0 puntos y genera una alerta de inhabilitación por falta de requisito de ley.",
+          "Cumplir 15 años de servicio comprobado otorga la base matemática para ser evaluado. Filtro excluyente si no se alcanza ese mínimo.",
         puntos: "mín. 15 años",
         excluyente: true,
       },
       {
         label: "Años adicionales de ejercicio (del año 16 en adelante)",
-        detalle: "Asigna 1,6667 puntos por cada año extra hasta alcanzar el tope de 25 puntos.",
-        puntos: "1,6667 pts / año",
+        detalle: "1,5 puntos por cada año extra como litigante, juez o docente.",
+        puntos: "1,5 pts / año",
+      },
+      {
+        label: "Regla de dilución (anti-dedo)",
+        detalle:
+          "Si el cargo de juez o docente universitario se obtuvo sin concurso público de oposición, cada año extra suma solo 0,15 puntos.",
+        puntos: "0,15 pts / año",
+      },
+      {
+        label: "Méritos de élite (PLUS)",
+        detalle:
+          "Puntos extra por actuaciones excepcionales comprobadas: arbitraje certificado, litigio ante instancias internacionales, defensa pro bono en derechos humanos, cargos en tribunales u organismos internacionales, o dirección gremial.",
+        puntos: "PLUS",
+      },
+    ],
+    cierre:
+      "Regla de cierre: el motor MERITUM-AI aplica un tope global restrictivo de 50 puntos máximos en este bloque, impidiendo que la puntuación se infle indefinidamente por antigüedad.",
+  },
+  {
+    numero: "04",
+    titulo: "Evaluación técnica y competencias",
+    maximo: 10,
+    descripcion:
+      "Traslada el resultado de las rúbricas y proyectos técnicos exigidos durante la fase legislativa de audiencias públicas.",
+    criterios: [
+      {
+        label: "Entrevista técnica",
+        detalle:
+          "Evaluación de conocimientos jurídicos, argumentación, oratoria y subsunción de criterios ante el comité parlamentario.",
+        puntos: "máx. 5 pts",
+      },
+      {
+        label: "Plan de modernización",
+        detalle:
+          "Calificación del proyecto escrito y defendido públicamente para la celeridad procesal y la modernización tecnológica de la administración de justicia. Sin plan documentado, el sistema asigna 0 puntos en este renglón.",
+        puntos: "máx. 5 pts",
       },
     ],
   },
@@ -190,7 +208,9 @@ export default async function ReglasPage() {
               </p>
             </li>
             <li className="border-l-2 border-balanza-600 bg-toga-50 px-4 py-3">
-              <p className="text-sm font-semibold text-toga-900">Garantiza la igualdad de condiciones</p>
+              <p className="text-sm font-semibold text-toga-900">
+                Garantiza la igualdad de condiciones
+              </p>
               <p className="mt-1 text-sm leading-relaxed text-toga-600">
                 Todos los postulantes a las distintas Salas del TSJ son auditados bajo la misma vara
                 de medir, garantizando la equidad procedimental.
@@ -224,13 +244,13 @@ export default async function ReglasPage() {
             <p className="mt-2 text-sm leading-relaxed text-toga-100 sm:text-base">
               <span className="font-semibold text-white">Puntuación total</span>
               <span className="text-toga-400"> = </span>
-              Academia (máx. 35)
+              Formación académica (máx. 30)
               <span className="text-toga-400"> + </span>
-              Docencia (máx. 20)
+              Producción científica (máx. 10)
               <span className="text-toga-400"> + </span>
-              Publicaciones (máx. 20)
+              Trayectoria profesional acumulativa (máx. 50)
               <span className="text-toga-400"> + </span>
-              Experiencia (máx. 25)
+              Evaluación técnica y plan de trabajo (máx. 10)
             </p>
           </div>
         </section>
@@ -281,7 +301,9 @@ export default async function ReglasPage() {
                         </p>
                         <p className="mt-0.5 text-sm leading-relaxed text-toga-500">{c.detalle}</p>
                       </div>
-                      <span className="shrink-0 text-sm tabular-nums text-toga-600">{c.puntos}</span>
+                      <span className="shrink-0 text-sm tabular-nums text-toga-600">
+                        {c.puntos}
+                      </span>
                     </li>
                   ))}
                 </ul>
